@@ -10,6 +10,7 @@ import (
 
 var client = http.Client{Timeout:time.Second*5}
 var transport = http.Transport{}
+var baseAddress = "https://discordapp.com/api/v6/"
 
 type LoginData struct {
 	Email string	`json:"email"`
@@ -24,7 +25,7 @@ type LoginResponse struct {
 
 func Login(LData LoginData) (lr LoginResponse, err error) {
 	d,_ := json.Marshal(LData)
-	req, _ := http.NewRequest("POST", "https://discordapp.com/api/v6/auth/login", strings.NewReader(string(d)))
+	req, _ := http.NewRequest("POST", baseAddress + "auth/login", strings.NewReader(string(d)))
 	req.Header.Set("Content-Type","application/json")
 	if r, rerr := client.Do(req); rerr == nil {
 		if rd, cerr := ioutil.ReadAll(r.Body); cerr == nil {
@@ -49,7 +50,7 @@ type MFAResponse struct {
 
 func MFA(data MFAData) (mr MFAResponse, err error) {
 	d,_ := json.Marshal(data)
-	req, _ := http.NewRequest("POST", "https://discordapp.com/api/v6/auth/mfa/totp", strings.NewReader(string(d)))
+	req, _ := http.NewRequest("POST", baseAddress + "auth/mfa/totp", strings.NewReader(string(d)))
 	req.Header.Set("Content-Type", "application/json")
 	if r, rerr := client.Do(req); rerr == nil {
 		if rd, cerr := ioutil.ReadAll(r.Body); cerr == nil {
